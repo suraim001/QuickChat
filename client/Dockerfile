@@ -2,6 +2,9 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 
+ARG VITE_BACKEND_URL=http://localhost:5000
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+
 # Install deps
 COPY package.json package-lock.json* ./
 RUN npm ci
