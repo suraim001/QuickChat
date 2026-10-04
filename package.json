@@ -10,7 +10,8 @@
     "client"
   ],
   "scripts": {
-    "build": "npm run build --workspace=client",
+    "install-deps": "npm install && npm install --workspace=client && npm install --workspace=server",
+    "build": "npm run install-deps && npm run build --workspace=client",
     "start": "npm start --workspace=server"
   },
   "dependencies": {
