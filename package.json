@@ -1,0 +1,13 @@
+{
+  "name": "mern-chatapp-root",
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=client",
+    "start": "npm start --workspace=server"
+  }
+}
