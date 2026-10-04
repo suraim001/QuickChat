@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "overrides": {
+    "braces": "^3.0.3"
+  },
   "scripts": {
-    "server": "nodemon --trace-warnings server.js",
+    "dev": "nodemon --trace-warnings server.js",
     "start": "node --trace-warnings server.js"
   },
   "keywords": [],
@@ -19,7 +22,9 @@
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.10.2",
-    "nodemon": "^3.1.14",
     "socket.io": "^4.8.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

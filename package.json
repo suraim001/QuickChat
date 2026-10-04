@@ -2,6 +2,9 @@
   "name": "mern-chatapp-root",
   "version": "1.0.0",
   "type": "module",
+  "overrides": {
+    "braces": "^3.0.3"
+  },
   "workspaces": [
     "server",
     "client"
@@ -9,5 +12,8 @@
   "scripts": {
     "build": "npm run build --workspace=client",
     "start": "npm start --workspace=server"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.14"
   }
 }
