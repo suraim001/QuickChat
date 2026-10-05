@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quick-chat-mongo
+  namespace: quick-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quick-chat-mongo
+  template:
+    metadata:
+      labels:
+        app: quick-chat-mongo
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:7
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_DATABASE
+              value: QuickChat
+          volumeMounts:
+            - name: mongo-data
+              mountPath: /data/db
+      volumes:
+        - name: mongo-data
+          emptyDir: {}
