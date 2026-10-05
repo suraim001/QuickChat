@@ -16,7 +16,7 @@ spec:
       containers:
         - name: server
           image: suraim001/quick-chat-server:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:

@@ -2,6 +2,7 @@ import express from 'express';
 import "dotenv/config";
 import cors from "cors";
 import http from "http";
+import fs from "fs";
 import { connectDB } from './lib/db.js';
 import userRouter from './routes/user.route.js';
 import messageRouter from './routes/message.route.js';
@@ -46,16 +47,22 @@ app.use(cors());
 
 app.use("/api/auth", userRouter);
 app.use("/api/messages", messageRouter);
+app.get("/api/status", (req, res) => res.send("Server is Live"));
 
-const __dirname = path.resolve();
-if(process.env.NODE_ENV === "production"){
-    app.use(express.static(path.join(__dirname, "../client/dist")));
+const candidateClientDistPaths = [
+    path.resolve(process.cwd(), "client", "dist", "index.html"),
+    path.resolve(process.cwd(), "..", "client", "dist", "index.html"),
+    path.resolve(process.cwd(), "../client/dist/index.html")
+];
+const resolvedClientIndexPath = candidateClientDistPaths.find((filePath) => fs.existsSync(filePath));
 
-    app.get('/*splat', (req,res)=>{
-        res.sendFile(path.resolve(__dirname, "..", "client", "dist", "index.html"));
-    })
-}else{
-    app.use("/api/status", (req,res)=> res.send("Server is Live"));
+if (process.env.NODE_ENV === "production" && resolvedClientIndexPath) {
+    const clientDistPath = path.dirname(resolvedClientIndexPath);
+    app.use(express.static(clientDistPath));
+
+    app.get('/*splat', (req, res) => {
+        res.sendFile(resolvedClientIndexPath);
+    });
 }
 
 // Connect to MongoDB
