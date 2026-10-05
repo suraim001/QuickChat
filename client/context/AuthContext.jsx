@@ -5,7 +5,10 @@ import { io } from "socket.io-client";
 
 
 const runtimeBackendUrl = typeof window !== "undefined" ? window.__APP_CONFIG__?.BACKEND_URL : undefined;
-const backendUrl = import.meta.env.VITE_BACKEND_URL || runtimeBackendUrl || "http://localhost:5000";
+const localDevBackendUrl = typeof window !== "undefined" && window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "";
+const backendUrl = import.meta.env.VITE_BACKEND_URL || runtimeBackendUrl || localDevBackendUrl || window.location.origin;
 axios.defaults.baseURL = backendUrl;
 
 export const AuthContext = createContext();
