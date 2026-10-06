@@ -17,6 +17,7 @@ export const AuthProvider = ({ children })=>{
     
     const [token, setToken] = useState(localStorage.getItem("token"));
     const [authUser, setAuthUser] = useState(null);
+    const [isAuthReady, setIsAuthReady] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [socket, setSocket] = useState(null);
 
@@ -30,6 +31,8 @@ export const AuthProvider = ({ children })=>{
             }
         } catch (error) {
             toast.error(error.message);
+        } finally {
+            setIsAuthReady(true);
         }
     }
 
@@ -38,11 +41,12 @@ export const AuthProvider = ({ children })=>{
         try {
             const { data } = await axios.post(`/api/auth/${state}`, credentials);
             if(data.success){
+                const nextToken = data.token;
+                axios.defaults.headers.common["token"] = nextToken;
+                setToken(nextToken);
+                localStorage.setItem("token", nextToken);
                 setAuthUser(data.userData);
                 connectSocket(data.userData);
-                axios.defaults.headers.common["token"] = data.token;
-                setToken(data.token);
-                localStorage.setItem("token", data.token);
                 toast.success(data.message);
             }else{
                 toast.error(data.message);
@@ -56,12 +60,12 @@ export const AuthProvider = ({ children })=>{
     // Logout function to handle user logout and socket disconnection
     const logout = async () => {
         localStorage.removeItem("token");
+        delete axios.defaults.headers.common["token"];
         setToken(null);
         setAuthUser(null);
         setOnlineUsers([]);
-        axios.defaults.headers.common["token"] = null;
         toast.success("Logged out succcessfully.");
-        socket.disconnect();
+        socket?.disconnect();
     }
 
     // Update profile function to handle user profile updates
@@ -95,14 +99,18 @@ export const AuthProvider = ({ children })=>{
     }
 
     useEffect(()=>{
-        if(token){
-            axios.defaults.headers.common["token"] = token;
+        if (!token) {
+            setIsAuthReady(true);
+            delete axios.defaults.headers.common["token"];
+            return;
         }
+
+        axios.defaults.headers.common["token"] = token;
         checkAuth();
-    },[])
+    }, [token])
 
     const value = {
-        axios, authUser, onlineUsers, socket, login, logout, updateProfile
+        axios, authUser, isAuthReady, onlineUsers, socket, login, logout, updateProfile
     }
 
     return (

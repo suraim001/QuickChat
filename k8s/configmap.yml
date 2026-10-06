@@ -7,4 +7,4 @@ data:
   NODE_ENV: "production"
   PORT: "5000"
   MONGODB_URI: "mongodb://quick-chat-mongo:27017"
-  BACKEND_URL: "http://localhost:30050"
+  BACKEND_URL: ""

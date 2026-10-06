@@ -8,7 +8,17 @@ import { AuthContext } from '../context/AuthContext.jsx'
 
 const App = () => {
 
-  const { authUser } = useContext(AuthContext)
+  const { authUser, isAuthReady } = useContext(AuthContext)
+
+  if (!isAuthReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white">
+        <div className="text-center">
+          <div className="text-lg font-medium">Checking session...</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="bg-[url('/bgImage.svg')] bg-contain">
